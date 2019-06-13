@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 from matplotlib import rc
 rc('font',**{'family':'serif','serif':['Roman']})
 rc('text', usetex=True)
-plt.rcParams.update({'font.size': 16})
+plt.rcParams.update({'font.size': 25})
 plt.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
 plt.rcParams['text.latex.preamble']=[r"\usepackage{bm}"]
 
@@ -39,8 +39,8 @@ pm10_transformed = functions.log_normal(pm10)
 # =============================================================================
 # Configuration
 # =============================================================================
-time_test = np.arange('2014-03-12', '2014-03-13', dtype='datetime64[h]')
-time_train = np.arange('2006-01-01', '2014-03-12', dtype='datetime64[h]')
+time_test = np.arange('2014-04-12', '2014-04-13', dtype='datetime64[h]')
+time_train = np.arange('2006-01-01', '2014-04-12', dtype='datetime64[h]')
 
 index_test = np.arange(np.where(time == time_test[0])[0], np.where(time == time_test[-1])[0]+1)
 index_train = np.arange(np.where(time == time_train[0])[0], np.where(time == time_train[-1])[0]+1)
@@ -75,8 +75,8 @@ for i in range(5):
 # =============================================================================
 # Iterative updating
 # =============================================================================
-MAX_ITERATION = 32
-BATCH_SIZE = 24*7*8  # weeks
+MAX_ITERATION = 10
+BATCH_SIZE = 24*7*32  # weeks
 TOTAL_SIZE = data_train.shape[1]
 
 this_mu_test_prior = mu_test_prior
@@ -133,7 +133,7 @@ for iteration in range(MAX_ITERATION):
 # Inverse transformed of the log-normal data     
 mu_test_posterior_inv, cov_test_posterior_inv = functions.log_normal_inverse(this_mu_test_posterior, this_cov_test_posterior)
     
-samples_mean, samples_median, samples_percentile_high, samples_percentile_low = functions.sample_log_normal(this_mu_test_posterior, this_cov_test_posterior, 10000, [95, 5])    
+samples_mean, samples_median, samples_percentile_high, samples_percentile_low, estimated_var = functions.sample_log_normal(this_mu_test_posterior, this_cov_test_posterior, 10000, [95, 5])    
 fig, axs = plt.subplots(1, 5, figsize=(20, 4), sharey=True)
 for i in range(5):
 #    axs[i].plot(samples_median[i, :], 'k') 
@@ -142,7 +142,7 @@ for i in range(5):
     axs[i].fill_between(np.arange(0, 24), samples_percentile_low[i, :], samples_percentile_high[i, :], color='lightgray')
     axs[i].set_xlim([0, 23])
     axs[i].set_xlabel(r'Time (hour)')
-    axs[i].set_ylim([0, .8*np.max(pm10)])
+    axs[i].set_ylim([0, .2*np.max(pm10)])
 axs[0].set_ylabel(r'PM$_{10}$ ($\mu g/m^3$)')
 
 fig, axes = plt.subplots(nrows=1, ncols=5, figsize=(24,4), sharey=True)
