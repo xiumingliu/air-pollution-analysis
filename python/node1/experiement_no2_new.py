@@ -42,7 +42,7 @@ no2_transformed = functions.log_normal(no2)
 # Configuration
 # =============================================================================
 test_day_start = np.datetime64('2013-01-01', dtype='datetime64[D]')
-test_day_end = np.datetime64('2014-01-01', dtype='datetime64[D]')
+test_day_end = np.datetime64('2016-01-01', dtype='datetime64[D]')
 
 error = np.empty(((test_day_end-test_day_start).astype('int'), 5, 24))
 estmated_var = np.empty(((test_day_end-test_day_start).astype('int'), 5, 24))
@@ -84,26 +84,26 @@ for day in np.arange(test_day_start, test_day_end, dtype='datetime64[D]'):
     # =============================================================================
     # Prediction made by the NN
     # =============================================================================
-    meteo_test = meteo[:, index_test[0]-24:index_test[0]]
-    feature_test = np.empty((6, 24))
-    feature_test[0:4, :] = meteo_test[[0, 1, 2, 4], :]
-    feature_test[4, :] = np.sin(np.deg2rad(meteo_test[3, :]))
-    feature_test[5, :] = np.cos(np.deg2rad(meteo_test[3, :]))
-    
-    if np.is_busday(time_test[0].astype('datetime64[D]')):
-        mu_test_prior = NN_model_busday.predict(np.concatenate(feature_test).reshape(1, 144))
-    else:
-        mu_test_prior = NN_model_holiday.predict(np.concatenate(feature_test).reshape(1, 144))  
-    mu_test_prior = mu_test_prior.reshape(5, 24)
+#    meteo_test = meteo[:, index_test[0]-24:index_test[0]]
+#    feature_test = np.empty((6, 24))
+#    feature_test[0:4, :] = meteo_test[[0, 1, 2, 4], :]
+#    feature_test[4, :] = np.sin(np.deg2rad(meteo_test[3, :]))
+#    feature_test[5, :] = np.cos(np.deg2rad(meteo_test[3, :]))
+#    
+#    if np.is_busday(time_test[0].astype('datetime64[D]')):
+#        mu_test_prior = NN_model_busday.predict(np.concatenate(feature_test).reshape(1, 144))
+#    else:
+#        mu_test_prior = NN_model_holiday.predict(np.concatenate(feature_test).reshape(1, 144))  
+#    mu_test_prior = mu_test_prior.reshape(5, 24)
     
     
     # =============================================================================
     # The prior of testing data
     # =============================================================================
-#    if np.is_busday(time_test[0].astype('datetime64[D]')):
-#        mu_test_prior = mean_busday
-#    else:
-#        mu_test_prior = mean_holiday
+    if np.is_busday(time_test[0].astype('datetime64[D]')):
+        mu_test_prior = mean_busday
+    else:
+        mu_test_prior = mean_holiday
         
     cov_test_prior = np.zeros((5, 24, 24))
     for i in range(5):
@@ -132,8 +132,8 @@ for day in np.arange(test_day_start, test_day_end, dtype='datetime64[D]'):
     # =============================================================================
     # Iterative updating
     # =============================================================================
-    MAX_ITERATION = 1
-    BATCH_SIZE = 24*7*1  # weeks
+    MAX_ITERATION = 10
+    BATCH_SIZE = 24*7*8  # weeks
     TOTAL_SIZE = data_train.shape[1]
     
     this_mu_test_prior = mu_test_prior
@@ -210,6 +210,4 @@ for i in range(5):
     axs[i].set_ylim([0, 100])
 axs[0].set_ylabel(r'NO$_2$ ($\mu g/m^3$)')
 plt.tight_layout()
-plt.savefig("no2_experiement_b1_bs1_withNN.pdf", format='pdf')
-
-np.save('no2_experiement_b1_bs1_withNN', error)
+plt.savefig("no2_experiement_b10_bs8_withoutNN.pdf", format='pdf')
