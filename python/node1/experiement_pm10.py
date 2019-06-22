@@ -132,7 +132,7 @@ for day in np.arange(test_day_start, test_day_end, dtype='datetime64[D]'):
     # =============================================================================
     # Iterative updating
     # =============================================================================
-    MAX_ITERATION = 10
+    MAX_ITERATION = 5
     BATCH_SIZE = 24*7*32  # weeks
     TOTAL_SIZE = data_train.shape[1]
     
@@ -233,6 +233,6 @@ for i in range(5):
     axs[i].set_ylim([0, 100])
 axs[0].set_ylabel(r'PM$_{10}$ ($\mu g/m^3$)')
 plt.tight_layout()
-plt.savefig("pm10_experiement_b10_bs32_withoutNN.pdf", format='pdf')
+plt.savefig("pm10_experiement_b5_bs32_withoutNN.pdf", format='pdf')
 
-np.save('pm10_experiement_b10_bs32_withoutNN', error)
+np.save('pm10_experiement_b5_bs32_withoutNN', error)
