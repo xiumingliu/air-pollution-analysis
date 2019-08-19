@@ -42,7 +42,7 @@ pm10_transformed = functions.log_normal(pm10)
 # Configuration
 # =============================================================================
 test_day_start = np.datetime64('2013-01-01', dtype='datetime64[D]')
-test_day_end = np.datetime64('2013-01-02', dtype='datetime64[D]')
+test_day_end = np.datetime64('2014-01-01', dtype='datetime64[D]')
 
 error = np.empty(((test_day_end-test_day_start).astype('int'), 5, 24))
 estmated_var = np.empty(((test_day_end-test_day_start).astype('int'), 5, 24))
@@ -133,7 +133,7 @@ for day in np.arange(test_day_start, test_day_end, dtype='datetime64[D]'):
     # SGP updating
     # =============================================================================
 
-    BATCH_SIZE = 24*7*8  # weeks
+    BATCH_SIZE = 24*7*80  # weeks
     TOTAL_SIZE = data_train.shape[1]
     IND_SIZE = 24*7
     
@@ -255,6 +255,6 @@ for i in range(5):
     axs[i].set_ylim([0, 100])
 axs[0].set_ylabel(r'PM$_{10}$ ($\mu g/m^3$)')
 plt.tight_layout()
-plt.savefig("pm10_experiement_b5_bs32_withNN_sgp.pdf", format='pdf')
+plt.savefig("pm10_experiement_ind1_bs80_withoutNN_sgp.pdf", format='pdf')
 
-np.save('pm10_experiement_b5_bs32_withNN_sgp', error)
+np.save('pm10_experiement_ind1_bs80_withoutNN_sgp', error)
