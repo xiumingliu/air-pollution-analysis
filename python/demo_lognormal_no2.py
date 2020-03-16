@@ -127,8 +127,8 @@ this_mu_test_posterior = np.empty((5, 24))
 this_cov_test_posterior = np.empty((5, 24, 24))
 
 for iteration in range(MAX_ITERATION):
-#    this_train_index = np.arange(TOTAL_SIZE-(iteration+1)*BATCH_SIZE, TOTAL_SIZE-iteration*BATCH_SIZE)
-    this_train_index = np.arange(TOTAL_SIZE-(MAX_ITERATION - iteration)*BATCH_SIZE, TOTAL_SIZE-(MAX_ITERATION - iteration - 1)*BATCH_SIZE)
+    this_train_index = np.arange(TOTAL_SIZE-(iteration+1)*BATCH_SIZE, TOTAL_SIZE-iteration*BATCH_SIZE)
+#    this_train_index = np.arange(TOTAL_SIZE-(MAX_ITERATION - iteration)*BATCH_SIZE, TOTAL_SIZE-(MAX_ITERATION - iteration - 1)*BATCH_SIZE)
     this_time_train = time_train[this_train_index]
     this_data_train = data_train[:, this_train_index]
     
@@ -163,15 +163,31 @@ for iteration in range(MAX_ITERATION):
 mu_test_posterior_inv, cov_test_posterior_inv = functions.log_normal_inverse(this_mu_test_posterior, this_cov_test_posterior)
     
 samples_mean, samples_median, samples_percentile_high, samples_percentile_low, samples_var = functions.sample_log_normal(this_mu_test_posterior, this_cov_test_posterior, 10000, [95, 5])    
+#fig, axs = plt.subplots(1, 5, figsize=(20, 4), sharey=True)
+#for i in range(5):
+##    axs[i].plot(samples_median[i, :], 'k') 
+#    axs[i].plot(samples_mean[i, :], 'k') 
+#    axs[i].plot(no2[i, index_test], 'k:')
+#    axs[i].fill_between(np.arange(0, 24), samples_percentile_low[i, :], samples_percentile_high[i, :], color='lightgray')
+#    axs[i].set_xlim([0, 23])
+#    axs[i].set_xlabel(r'Time (hour)')
+#    axs[i].set_ylim([0, .8*np.max(no2)])
+#axs[0].set_ylabel(r'NO$_2$ ($\mu g/m^3$)')
+#plt.tight_layout()
+
+  
 fig, axs = plt.subplots(1, 5, figsize=(20, 4), sharey=True)
-for i in range(5):
-#    axs[i].plot(samples_median[i, :], 'k') 
-    axs[i].plot(samples_mean[i, :], 'k') 
-    axs[i].plot(no2[i, index_test], 'k:')
-    axs[i].fill_between(np.arange(0, 24), samples_percentile_low[i, :], samples_percentile_high[i, :], color='lightgray')
-    axs[i].set_xlim([0, 23])
-    axs[i].set_xlabel(r'Time (hour)')
-    axs[i].set_ylim([0, .8*np.max(no2)])
+for j in range(1000):
+    this_sample = functions.sample_log_normal_new(this_mu_test_posterior, this_cov_test_posterior, 1)  
+    for i in range(5):
+        axs[i].plot(this_sample[i, :], 'lightgray', alpha=0.1) 
+#        axs[i].plot(samples_median[i, :], 'k') 
+        axs[i].plot(samples_mean[i, :], 'k') 
+        axs[i].plot(no2[i, index_test], 'k:')
+#        axs[i].fill_between(np.arange(0, 24), samples_percentile_low[i, :], samples_percentile_high[i, :], color='lightgray')
+        axs[i].set_xlim([0, 23])
+        axs[i].set_xlabel(r'Time (hour)')
+        axs[i].set_ylim([0, .8*np.max(no2)])
 axs[0].set_ylabel(r'NO$_2$ ($\mu g/m^3$)')
 plt.tight_layout()
 plt.savefig("no2_example_posterior_mean_b10_bs8_new.pdf", format='pdf')

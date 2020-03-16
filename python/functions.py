@@ -50,6 +50,13 @@ def sample_log_normal(mu, cov, sample_size, q):
         
     return samples_mu, samples_median, samples_percentile1, samples_percentile2, samples_var
 
+def sample_log_normal_new(mu, cov, sample_size):
+    this_samples = np.empty(np.shape(mu))
+    for i in range(mu.shape[0]):
+        this_samples[i, :] = np.exp(np.random.multivariate_normal(mu[i, :], cov[i, :, :], size=sample_size))
+
+    return this_samples
+
 def acf(data_train):
     acf = np.zeros((np.shape(data_train)[0], 2*np.shape(data_train)[1]-1))
     for i in range(data_train.shape[0]):
