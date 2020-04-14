@@ -155,3 +155,10 @@ for ax in axes.flat:
 cbar = fig.colorbar(im, ax=axes.ravel().tolist(), pad = 0.01)
 axes[0].set_ylabel(r'Time (hour)')
 plt.show()
+
+plt.figure()
+plt.plot(mu_test_prior[0, :])
+
+plt.figure()
+plt.imshow(cov_test_prior[0, :, :], cmap = 'coolwarm')
+plt.colorbar()
