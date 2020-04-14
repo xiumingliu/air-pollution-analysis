@@ -88,80 +88,71 @@ print("Median error at Station 1, using 40 weeks of data (LSTM): %.2f" % np.medi
 no2_experiement_rnn = np.load("no2_experiement_rnn.npy")
 print("Median error at Station 1, using 40 weeks of data (RNN): %.2f" % np.median(np.average(np.abs(no2_experiement_rnn[:, 0, :]), axis=1), axis=0))
 
+# =============================================================================
+# Plot NO2
+# =============================================================================
 
+# Station 1
 fig, axs = plt.subplots(1, 4, figsize=(16, 4), sharey=True)  
-axs[0].plot(np.median((np.abs(no2_experiement_b10_bs16_withNN[:, 0, :])), axis=0))
+axs[0].plot(np.median((np.abs(no2_experiement_b10_bs16_withNN[:, 0, :])), axis=0), 'k', label='1')
 axs[0].fill_between(range(24), np.percentile((np.abs(no2_experiement_b10_bs16_withNN[:, 0, :])), 25, axis=0), 
-                 np.percentile((np.abs(no2_experiement_b10_bs16_withNN[:, 0, :])), 75, axis=0), alpha=0.2)
+                 np.percentile((np.abs(no2_experiement_b10_bs16_withNN[:, 0, :])), 75, axis=0), color='lightgray')
 axs[0].set_xlim([0, 23])
 axs[0].set_ylim([0, 30])
+axs[0].set_yticks([0, 10, 20, 30])
 axs[0].set_xlabel(r'Time (hour)')
+#axs[0].legend()
+axs[0].grid(True, axis='y')
+axs[0].set_title('Belief update')
 
-axs[1].plot(np.median((np.abs(no2_experiement_ind1_bs40_withoutNN_sgp[:, 0, :])), axis=0))
+axs[1].plot(np.median((np.abs(no2_experiement_ind1_bs40_withoutNN_sgp[:, 0, :])), axis=0), 'k', label='2')
 axs[1].fill_between(range(24), np.percentile((np.abs(no2_experiement_ind1_bs40_withoutNN_sgp[:, 0, :])), 25, axis=0), 
-                 np.percentile((np.abs(no2_experiement_ind1_bs40_withoutNN_sgp[:, 0, :])), 75, axis=0), alpha=0.2)
+                 np.percentile((np.abs(no2_experiement_ind1_bs40_withoutNN_sgp[:, 0, :])), 75, axis=0), color='lightgray')
 axs[1].set_xlim([0, 23])
 axs[1].set_ylim([0, 30])
 axs[1].set_xlabel(r'Time (hour)')
+#axs[1].legend()
+axs[1].grid(True, axis='y')
+axs[1].set_title('SGP')
 
-axs[2].plot(np.median((np.abs(no2_experiement_lstm[:, 0, :])), axis=0))
+axs[2].plot(np.median((np.abs(no2_experiement_lstm[:, 0, :])), axis=0), 'k', label='3')
 axs[2].fill_between(range(24), np.percentile((np.abs(no2_experiement_lstm[:, 0, :])), 25, axis=0), 
-                 np.percentile((np.abs(no2_experiement_lstm[:, 0, :])), 75, axis=0), alpha=0.2)
+                 np.percentile((np.abs(no2_experiement_lstm[:, 0, :])), 75, axis=0), color='lightgray')
 axs[2].set_xlim([0, 23])
 axs[2].set_ylim([0, 30])
 axs[2].set_xlabel(r'Time (hour)')
+#axs[2].legend()
+axs[2].grid(True, axis='y')
+axs[2].set_title('RNN')
 
-axs[3].plot(np.median((np.abs(no2_experiement_rnn[:, 0, :])), axis=0))
+axs[3].plot(np.median((np.abs(no2_experiement_rnn[:, 0, :])), axis=0), 'k', label='4')
 axs[3].fill_between(range(24), np.percentile((np.abs(no2_experiement_rnn[:, 0, :])), 25, axis=0), 
-                 np.percentile((np.abs(no2_experiement_rnn[:, 0, :])), 75, axis=0), alpha=0.2)
+                 np.percentile((np.abs(no2_experiement_rnn[:, 0, :])), 75, axis=0), color='lightgray')
 axs[3].set_xlim([0, 23])
 axs[3].set_ylim([0, 30])
 axs[3].set_xlabel(r'Time (hour)')
+#axs[3].legend()
+axs[3].grid(True, axis='y')
+axs[3].set_title('Deep LSTM')
 
 axs[0].set_ylabel(r'Absolute error ($\mu g/m^3$)')
 plt.tight_layout()
+plt.savefig("NO2_compare_time.pdf", format='pdf')
 
-plt.figure()
-plt.boxplot([(np.abs(no2_experiement_b10_bs16_withNN[:, 0, 8])), 
-             (np.abs(no2_experiement_ind1_bs40_withoutNN_sgp[:, 0, 8])), 
-             (np.abs(no2_experiement_lstm[:, 0, 8])), 
-             (np.abs(no2_experiement_rnn[:, 0, 8]))], showfliers = False)
-
-plt.figure()
-plt.boxplot([(np.abs(no2_experiement_b10_bs16_withNN[:, 1, 8])), 
-             (np.abs(no2_experiement_ind1_bs40_withoutNN_sgp[:, 1, 8])), 
-             (np.abs(no2_experiement_lstm[:, 1, 8])), 
-             (np.abs(no2_experiement_rnn[:, 1, 8]))], showfliers = False)
-
-plt.figure()
-plt.boxplot([(np.abs(no2_experiement_b10_bs16_withNN[:, 2, 8])), 
-             (np.abs(no2_experiement_ind1_bs40_withoutNN_sgp[:, 2, 8])), 
-             (np.abs(no2_experiement_lstm[:, 2, 8])), 
-             (np.abs(no2_experiement_rnn[:, 2, 8]))], showfliers = False)
-
-plt.figure()
-plt.boxplot([(np.abs(no2_experiement_b10_bs16_withNN[:, 3, 8])), 
-             (np.abs(no2_experiement_ind1_bs40_withoutNN_sgp[:, 3, 8])), 
-             (np.abs(no2_experiement_lstm[:, 3, 8])), 
-             (np.abs(no2_experiement_rnn[:, 3, 8]))], showfliers = False)
-
-plt.figure()
-plt.boxplot([(np.abs(no2_experiement_b10_bs16_withNN[:, 4, 8])), 
-             (np.abs(no2_experiement_ind1_bs40_withoutNN_sgp[:, 4, 8])), 
-             (np.abs(no2_experiement_lstm[:, 4, 8])), 
-             (np.abs(no2_experiement_rnn[:, 4, 8]))], showfliers = False)
-
-
+# Box plot
 fig, axs = plt.subplots(1, 5, figsize=(20, 4), sharey=True)  
 for i in range(5):
     axs[i].boxplot([(np.abs(no2_experiement_b10_bs8_withNN[:, i, 8])),
        (np.abs(no2_experiement_ind1_bs40_withoutNN_sgp[:, i, 8])),
        (np.abs(no2_experiement_lstm[:, i, 8])),
        (np.abs(no2_experiement_rnn[:, i, 8]))], showfliers = False)
+#    axs[i].grid(True, axis='y')
 #    axs[i].set_xlim([0, 23])
 #    axs[i].set_xlabel(r'Time (hour)')
-#    axs[i].set_ylim([0, .8*np.max(no2)])
-axs[0].set_ylabel(r'NO$_2$ ($\mu g/m^3$)')
+#    axs[i].set_ylim([0, 100])
+axs[0].set_ylabel(r'Absolute error ($\mu g/m^3$)')
+plt.setp(axs, xticks=[1, 2, 3, 4],
+         xticklabels=['B', 'S', 'R', 'D'])
 plt.tight_layout()
 plt.savefig("NO2_compare.pdf", format='pdf')
 
@@ -276,46 +267,59 @@ plt.plot(np.median(np.abs(pm10_experiement_lstm[:, 0, :]), axis=0))
 plt.plot(np.median(np.abs(pm10_experiement_rnn[:, 0, :]), axis=0))
 
 fig, axs = plt.subplots(1, 4, figsize=(16, 4), sharey=True)  
-axs[0].plot(np.median((np.abs(pm10_experiement_b10_bs8_withNN[:, 0, :]*.8)), axis=0))
+axs[0].plot(np.median((np.abs(pm10_experiement_b10_bs8_withNN[:, 0, :]*.8)), axis=0), 'k')
 axs[0].fill_between(range(24), np.percentile((np.abs(pm10_experiement_b10_bs8_withNN[:, 0, :]*.8)), 25, axis=0), 
-                 np.percentile((np.abs(pm10_experiement_b10_bs8_withNN[:, 0, :]*.8)), 75, axis=0), alpha=0.2)
+                 np.percentile((np.abs(pm10_experiement_b10_bs8_withNN[:, 0, :]*.8)), 75, axis=0), color='lightgray')
 axs[0].set_xlim([0, 23])
 axs[0].set_ylim([0, 30])
+axs[0].set_yticks([0, 10, 20, 30])
 axs[0].set_xlabel(r'Time (hour)')
+axs[0].grid(True, axis='y')
+axs[0].set_title('Belief update')
 
-axs[1].plot(np.median((np.abs(pm10_experiement_ind1_bs40_withoutNN_sgp[:, 0, :])), axis=0))
+axs[1].plot(np.median((np.abs(pm10_experiement_ind1_bs40_withoutNN_sgp[:, 0, :])), axis=0), 'k')
 axs[1].fill_between(range(24), np.percentile((np.abs(pm10_experiement_ind1_bs40_withoutNN_sgp[:, 0, :])), 25, axis=0), 
-                 np.percentile((np.abs(pm10_experiement_ind1_bs40_withoutNN_sgp[:, 0, :])), 75, axis=0), alpha=0.2)
+                 np.percentile((np.abs(pm10_experiement_ind1_bs40_withoutNN_sgp[:, 0, :])), 75, axis=0), color='lightgray')
 axs[1].set_xlim([0, 23])
 axs[1].set_ylim([0, 30])
 axs[1].set_xlabel(r'Time (hour)')
+axs[1].grid(True, axis='y')
+axs[1].set_title('SGP')
 
-axs[2].plot(np.median((np.abs(pm10_experiement_lstm[:, 0, :])), axis=0))
+axs[2].plot(np.median((np.abs(pm10_experiement_lstm[:, 0, :])), axis=0), 'k')
 axs[2].fill_between(range(24), np.percentile((np.abs(pm10_experiement_lstm[:, 0, :])), 25, axis=0), 
-                 np.percentile((np.abs(pm10_experiement_lstm[:, 0, :])), 75, axis=0), alpha=0.2)
+                 np.percentile((np.abs(pm10_experiement_lstm[:, 0, :])), 75, axis=0), color='lightgray')
 axs[2].set_xlim([0, 23])
 axs[2].set_ylim([0, 30])
 axs[2].set_xlabel(r'Time (hour)')
+axs[2].grid(True, axis='y')
+axs[2].set_title('RNN')
 
-axs[3].plot(np.median((np.abs(pm10_experiement_rnn[:, 0, :])), axis=0))
+axs[3].plot(np.median((np.abs(pm10_experiement_rnn[:, 0, :])), axis=0), 'k')
 axs[3].fill_between(range(24), np.percentile((np.abs(pm10_experiement_rnn[:, 0, :])), 25, axis=0), 
-                 np.percentile((np.abs(pm10_experiement_rnn[:, 0, :])), 75, axis=0), alpha=0.2)
+                 np.percentile((np.abs(pm10_experiement_rnn[:, 0, :])), 75, axis=0), color='lightgray')
 axs[3].set_xlim([0, 23])
 axs[3].set_ylim([0, 30])
 axs[3].set_xlabel(r'Time (hour)')
+axs[3].grid(True, axis='y')
+axs[3].set_title('Deep LSTM')
 
 axs[0].set_ylabel(r'Absolute error ($\mu g/m^3$)')
 plt.tight_layout()
+plt.savefig("PM10_compare_time.pdf", format='pdf')
 
 fig, axs = plt.subplots(1, 5, figsize=(20, 4), sharey=True)  
 for i in range(5):
-    axs[i].boxplot([(np.abs(pm10_experiement_b10_bs8_withNN[:, i, 8]*0.8)),
+    axs[i].boxplot([(np.abs(pm10_experiement_b10_bs8_withNN[:, i, 8])),
        (np.abs(pm10_experiement_ind1_bs40_withoutNN_sgp[:, i, 8])),
        (np.abs(pm10_experiement_lstm[:, i, 8])),
        (np.abs(pm10_experiement_rnn[:, i, 8]))], showfliers = False)
+    axs[i].set_xticks([1, 2, 3, 4])
 #    axs[i].set_xlim([0, 23])
 #    axs[i].set_xlabel(r'Time (hour)')
 #    axs[i].set_ylim([0, .8*np.max(no2)])
-axs[0].set_ylabel(r'PM$_{10}$ ($\mu g/m^3$)')
+axs[0].set_ylabel(r'Absolute error ($\mu g/m^3$)')
+plt.setp(axs, xticks=[1, 2, 3, 4],
+         xticklabels=['B', 'S', 'R', 'D'])
 plt.tight_layout()
 plt.savefig("PM10_compare.pdf", format='pdf')
